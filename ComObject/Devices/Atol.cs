@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Threading;
+using Fptr10Lib;
 
-namespace ComObject
+namespace ComObject.Devices
 {
     /// <summary>
     /// Эмуляция работы драйвера Атола как COM объекта.
     /// </summary>
-    public class EmulatorDevice
+    public class Atol : IDevice
     {
-        public readonly string ThreadName;
+        public string ThreadName { get; private set; }
 
-        private dynamic _com;
+        private Fptr _com;
 
         /// <summary>
         /// Получает имя потока, инициализирует com объект.
         /// </summary>
         /// <param name="threadName"></param>
-        public EmulatorDevice(string threadName) 
+        public Atol(string threadName) 
         { 
             ThreadName = threadName;
             InitDriver();
@@ -25,7 +26,7 @@ namespace ComObject
         /// <summary>
         /// Эмуляция работы принтера путем вывода строк на консоль.
         /// </summary>
-        public void Print()
+        public void Print(int numberString, int threadSleep)
         {
             if(_com == null)
             {
@@ -35,10 +36,10 @@ namespace ComObject
 
             // Эмуляция работы принтера
             Console.WriteLine($"Начало работы принтера {ThreadName}");
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < numberString; i++)
             {
-                Console.WriteLine($"{ThreadName} -> строка - {i}");
-                Thread.Sleep(1);
+                Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")}: {ThreadName} -> строка - {i}");
+                Thread.Sleep(threadSleep);
             }
             Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")}: {ThreadName} - Печать закончена.");
         }
@@ -46,7 +47,7 @@ namespace ComObject
         /// <summary>
         /// Получить версию драйвера.
         /// </summary>
-        public void GetVersion()
+        public void GetVersion(string numberString)
         {
             if(_com == null)
             {
@@ -55,7 +56,7 @@ namespace ComObject
             }
 
             string version = _com.version();
-            Console.WriteLine(version);
+            Console.WriteLine($"{ThreadName} {numberString} {version}");
         }
 
         public bool DisposeDriver()
@@ -85,7 +86,7 @@ namespace ComObject
             }
             try
             {
-                _com = Activator.CreateInstance(t);
+                _com = (Fptr)Activator.CreateInstance(t);
                 return true;
             }
             catch (Exception ex)
@@ -98,8 +99,7 @@ namespace ComObject
         {
             try
             {
-                _com?.close();
-                return true;
+                return _com?.close() == 0;
             }
             catch (Exception ex)
             {

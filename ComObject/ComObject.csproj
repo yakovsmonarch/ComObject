@@ -41,9 +41,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EmulatorDevice.cs" />
+    <Compile Include="Devices\Atol.cs" />
+    <Compile Include="Devices\IDevice.cs" />
+    <Compile Include="Devices\Shtrih.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="DrvFRLib">
+      <Guid>{332C8050-469C-4B4D-A192-68CD3CB252BA}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>17</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Fptr10Lib">
+      <Guid>{0B9A023D-410B-4CB2-AA1F-61FEE7CC29D6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

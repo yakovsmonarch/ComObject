@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComObject.Devices;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,26 +9,31 @@ namespace ComObject
     {
         static void Main(string[] args)
         {
-            Task atol = new Task(() => GetVersion($"(Аtol)Поток"));
-            Task atolNet = new Task(() => GetVersion($"(АtolNet)Поток"));
+            //Task atol = new Task(() => Print(new Atol("(Аtol)Поток")));
+            //Task atolNet = new Task(() => Print(new Atol("(АtolNet)Поток")));
+            //Task shtrih = new Task(() => Print(new Shtrih("(Shtrih---)Поток")));
+            Task shtrih1 = new Task(() => Print(new Shtrih("(Shtrih1)Поток")));
+            Task shtrih2 = new Task(() => Print(new Shtrih("(Shtrih2---)Поток")));
 
-            atol.Start();
-            atolNet.Start();
+            //atol.Start();
+            //atolNet.Start();
+            //shtrih.Start();
+            shtrih1.Start();
+            shtrih2.Start();
 
             Console.ReadLine();
         }
 
-        private static void GetVersion(string threadName)
+        private static void Print(IDevice device)
         {
-            EmulatorDevice emulatorDevice = new EmulatorDevice(threadName);
-            emulatorDevice.Print();
-            if (emulatorDevice.DisposeDriver())
+            device.Print(100, 1);
+            if (device.DisposeDriver())
             {
-                Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")}: Драйвер в потоке {threadName} выгружен.");
+                Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")}: Драйвер в потоке {device.ThreadName} выгружен.");
             }
             else
             {
-                Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")}: Драйвер в потоке {threadName} не удалось выгрузить.");
+                Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")}: Драйвер в потоке {device.ThreadName} не удалось выгрузить.");
             }
         }
     }
