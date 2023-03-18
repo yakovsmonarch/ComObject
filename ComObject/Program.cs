@@ -8,8 +8,8 @@ namespace ComObject
     {
         static void Main(string[] args)
         {
-            Task atol = new Task(() => GetVersion($"(atol)Поток"));
-            Task atolNet = new Task(() => GetVersion($"(atolNet)Поток"));
+            Task atol = new Task(() => GetVersion($"(Аtol)Поток"));
+            Task atolNet = new Task(() => GetVersion($"(АtolNet)Поток"));
 
             atol.Start();
             atolNet.Start();
@@ -20,7 +20,15 @@ namespace ComObject
         private static void GetVersion(string threadName)
         {
             EmulatorDevice emulatorDevice = new EmulatorDevice(threadName);
-            emulatorDevice.GetVersion();
+            emulatorDevice.Print();
+            if (emulatorDevice.DisposeDriver())
+            {
+                Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")}: Драйвер в потоке {threadName} выгружен.");
+            }
+            else
+            {
+                Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")}: Драйвер в потоке {threadName} не удалось выгрузить.");
+            }
         }
     }
 }

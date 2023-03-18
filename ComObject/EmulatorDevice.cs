@@ -4,40 +4,76 @@ using System.Threading;
 
 namespace ComObject
 {
+    /// <summary>
+    /// Эмуляция работы драйвера Атола как COM объекта.
+    /// </summary>
     public class EmulatorDevice
     {
         public readonly string ThreadName;
 
         private IFptr _com;
 
+        /// <summary>
+        /// Получает имя потока, инициализирует com объект.
+        /// </summary>
+        /// <param name="threadName"></param>
         public EmulatorDevice(string threadName) 
         { 
             ThreadName = threadName;
             InitDriver();
         }
 
-        public void GetVersion()
+        /// <summary>
+        /// Эмуляция работы принтера путем вывода строк на консоль.
+        /// </summary>
+        public void Print()
         {
             if(_com == null)
             {
-                Console.WriteLine("Не удалось получить версию - com объкт не загружен.");
-            }
-            string version = _com.version();
-
-
-            if(DisposeDriver() == false)
-            {
-                throw new Exception("Com объект не удалось уничтожить!");
+                Console.WriteLine($"Драйвер не загружен.");
+                return;
             }
 
             // Эмуляция работы принтера
             Console.WriteLine($"Начало работы принтера {ThreadName}");
-            for(int i = 0; i < 500; i++)
+            for (int i = 0; i < 100; i++)
             {
                 Console.WriteLine($"{ThreadName} -> строка - {i}");
-                //Thread.Sleep(1);
             }
-            Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")} - {ThreadName} - {version}. Печать закончена.");
+            Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")}: {ThreadName} - Печать закончена.");
+        }
+
+        /// <summary>
+        /// Получить версию драйвера.
+        /// </summary>
+        public void GetVersion()
+        {
+            if(_com == null)
+            {
+                Console.WriteLine("Не удалось получить версию - com объект не загружен.");
+                return;
+            }
+
+            string version = _com.version();
+            Console.WriteLine(version);
+        }
+
+        public bool DisposeDriver()
+        {
+            try
+            {
+                if (_com != null)
+                {
+                    Disconnect();
+                    _com?.destroy();
+                    _com = null;
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private bool InitDriver()
@@ -71,22 +107,5 @@ namespace ComObject
             }
         }
 
-        private bool DisposeDriver()
-        {
-            try
-            {
-                if (_com != null)
-                {
-                    Disconnect();
-                    _com?.destroy();
-                    _com = null;
-                }
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
     }
 }
