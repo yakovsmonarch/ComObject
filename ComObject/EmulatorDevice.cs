@@ -1,5 +1,4 @@
-﻿using Fptr10Lib;
-using System;
+﻿using System;
 using System.Threading;
 
 namespace ComObject
@@ -11,7 +10,7 @@ namespace ComObject
     {
         public readonly string ThreadName;
 
-        private IFptr _com;
+        private dynamic _com;
 
         /// <summary>
         /// Получает имя потока, инициализирует com объект.
@@ -85,7 +84,7 @@ namespace ComObject
             }
             try
             {
-                _com = (IFptr)Activator.CreateInstance(t);
+                _com = Activator.CreateInstance(t);
                 return true;
             }
             catch (Exception ex)
