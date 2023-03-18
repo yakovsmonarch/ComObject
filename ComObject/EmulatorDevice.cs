@@ -38,6 +38,7 @@ namespace ComObject
             for (int i = 0; i < 100; i++)
             {
                 Console.WriteLine($"{ThreadName} -> строка - {i}");
+                Thread.Sleep(1);
             }
             Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss:FFFFFFF")}: {ThreadName} - Печать закончена.");
         }
